@@ -2,6 +2,7 @@ package components
 
 import (
 	"fmt"
+	"net/url"
 	"slices"
 	"strconv"
 	"strings"
@@ -15,6 +16,7 @@ import (
 	"github.com/AhmedTheGeek/fastsql/drivers"
 	"github.com/AhmedTheGeek/fastsql/helpers"
 	"github.com/AhmedTheGeek/fastsql/helpers/logger"
+	"github.com/AhmedTheGeek/fastsql/internal/ssh"
 	"github.com/AhmedTheGeek/fastsql/models"
 )
 
@@ -225,6 +227,30 @@ func (cs *ConnectionSelection) Connect(connection models.Connection) *tview.Appl
 		}
 	}
 
+	// Start SSH tunnel if configured
+	var sshTunnel *ssh.Tunnel
+	connectionURL := connection.URL
+
+	if connection.SSH != nil && connection.SSH.Enabled {
+		cs.StatusText.SetText("🔒 Starting SSH tunnel...").SetTextColor(app.Styles.TertiaryTextColor)
+		App.Draw()
+
+		var err error
+		sshTunnel, err = ssh.GlobalManager.StartTunnel(app.App.Context(), connection.Name, connection.SSH)
+		if err != nil {
+			cs.StatusText.SetText(fmt.Sprintf("SSH tunnel error: %s", err.Error())).SetTextStyle(tcell.StyleDefault.Foreground(tcell.ColorRed))
+			return App.Draw()
+		}
+
+		// Modify the connection URL to route through the tunnel
+		connectionURL = rewriteURLForTunnel(connection.URL, sshTunnel.LocalAddr())
+
+		logger.Debug("SSH tunnel established", map[string]any{
+			"connection": connection.Name,
+			"localAddr":  sshTunnel.LocalAddr(),
+		})
+	}
+
 	cs.StatusText.SetText("Connecting...").SetTextColor(app.Styles.TertiaryTextColor)
 	App.Draw()
 
@@ -242,23 +268,43 @@ func (cs *ConnectionSelection) Connect(connection models.Connection) *tview.Appl
 	default:
 		errorMsg := fmt.Sprintf("Unsupported database provider: '%s'. Valid providers are: mysql, postgres, sqlite3, sqlserver", connection.Provider)
 		cs.StatusText.SetText(errorMsg).SetTextStyle(tcell.StyleDefault.Foreground(tcell.ColorRed))
+		// Clean up SSH tunnel if we fail to connect
+		if sshTunnel != nil {
+			ssh.GlobalManager.StopTunnel(connection.Name)
+		}
 		return App.Draw()
 	}
 
-	err := newDBDriver.Connect(connection.URL)
+	err := newDBDriver.Connect(connectionURL)
 	if err != nil {
+		// Clean up SSH tunnel on connection failure
+		if sshTunnel != nil {
+			ssh.GlobalManager.StopTunnel(connection.Name)
+		}
 		cs.StatusText.SetText(err.Error()).SetTextStyle(tcell.StyleDefault.Foreground(tcell.ColorRed))
 		return App.Draw()
 	}
 
 	selectedRow, selectedCol := connectionsTable.GetSelection()
 	cell := connectionsTable.GetCell(selectedRow, selectedCol)
-	cell.SetText(fmt.Sprintf("[green]* %s", cell.Text))
+
+	// Show 🔒 icon if SSH tunnel is active
+	if sshTunnel != nil {
+		cell.SetText(fmt.Sprintf("[green]🔒 %s", cell.Text))
+	} else {
+		cell.SetText(fmt.Sprintf("[green]* %s", cell.Text))
+	}
 	cs.StatusText.SetText("")
 
 	newHome := NewHomePage(connection, newDBDriver)
 	newHome.Tree.SetCurrentNode(newHome.Tree.GetRoot())
-	newHome.Tree.Wrapper.SetTitle(connection.Name)
+
+	// Show 🔒 in title if SSH tunnel is active
+	if sshTunnel != nil {
+		newHome.Tree.Wrapper.SetTitle(fmt.Sprintf("🔒 %s", connection.Name))
+	} else {
+		newHome.Tree.Wrapper.SetTitle(connection.Name)
+	}
 
 	mainPages.AddAndSwitchToPage(connection.Name, newHome, true)
 	App.SetFocus(newHome.Tree)
@@ -295,4 +341,19 @@ func setupOutputVariableCommand(variables map[string]string, command *models.Com
 	}
 
 	return onCommandDone, captureVariable
+}
+
+// rewriteURLForTunnel modifies a database connection URL to route through an SSH tunnel.
+// It replaces the host:port in the URL with the local tunnel address.
+func rewriteURLForTunnel(originalURL, tunnelAddr string) string {
+	parsed, err := url.Parse(originalURL)
+	if err != nil {
+		// If we can't parse, try a simple string replacement approach
+		return originalURL
+	}
+
+	// Replace the host with the tunnel address
+	parsed.Host = tunnelAddr
+
+	return parsed.String()
 }
