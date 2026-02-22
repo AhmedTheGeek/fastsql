@@ -1,4 +1,4 @@
-module github.com/jorgerojas26/lazysql
+module github.com/AhmedTheGeek/fastsql
 
 go 1.23
 

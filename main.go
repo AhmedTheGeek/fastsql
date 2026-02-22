@@ -9,9 +9,9 @@ import (
 
 	"github.com/go-sql-driver/mysql"
 
-	"github.com/jorgerojas26/lazysql/app"
-	"github.com/jorgerojas26/lazysql/components"
-	"github.com/jorgerojas26/lazysql/helpers/logger"
+	"github.com/AhmedTheGeek/fastsql/app"
+	"github.com/AhmedTheGeek/fastsql/components"
+	"github.com/AhmedTheGeek/fastsql/helpers/logger"
 )
 
 var version = "dev"

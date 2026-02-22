@@ -3,7 +3,7 @@ package components
 import (
 	"github.com/gdamore/tcell/v2"
 
-	"github.com/jorgerojas26/lazysql/app"
+	"github.com/AhmedTheGeek/fastsql/app"
 )
 
 var App = app.App

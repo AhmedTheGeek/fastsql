@@ -6,9 +6,9 @@ import (
 
 	"github.com/gdamore/tcell/v2"
 
-	cmd "github.com/jorgerojas26/lazysql/commands"
-	"github.com/jorgerojas26/lazysql/keymap"
-	"github.com/jorgerojas26/lazysql/models"
+	cmd "github.com/AhmedTheGeek/fastsql/commands"
+	"github.com/AhmedTheGeek/fastsql/keymap"
+	"github.com/AhmedTheGeek/fastsql/models"
 )
 
 // local alias added for clarity purpose

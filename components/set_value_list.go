@@ -4,10 +4,10 @@ import (
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 
-	"github.com/jorgerojas26/lazysql/app"
-	"github.com/jorgerojas26/lazysql/commands"
-	"github.com/jorgerojas26/lazysql/drivers"
-	"github.com/jorgerojas26/lazysql/models"
+	"github.com/AhmedTheGeek/fastsql/app"
+	"github.com/AhmedTheGeek/fastsql/commands"
+	"github.com/AhmedTheGeek/fastsql/drivers"
+	"github.com/AhmedTheGeek/fastsql/models"
 )
 
 type SetValueList struct {

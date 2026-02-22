@@ -6,10 +6,10 @@ import (
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 
-	"github.com/jorgerojas26/lazysql/app"
-	"github.com/jorgerojas26/lazysql/drivers"
-	"github.com/jorgerojas26/lazysql/helpers"
-	"github.com/jorgerojas26/lazysql/models"
+	"github.com/AhmedTheGeek/fastsql/app"
+	"github.com/AhmedTheGeek/fastsql/drivers"
+	"github.com/AhmedTheGeek/fastsql/helpers"
+	"github.com/AhmedTheGeek/fastsql/models"
 )
 
 type ConnectionForm struct {

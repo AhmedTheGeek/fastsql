@@ -9,8 +9,8 @@ import (
 
 	"github.com/pelletier/go-toml/v2"
 
-	"github.com/jorgerojas26/lazysql/drivers"
-	"github.com/jorgerojas26/lazysql/models"
+	"github.com/AhmedTheGeek/fastsql/drivers"
+	"github.com/AhmedTheGeek/fastsql/models"
 )
 
 type Config struct {

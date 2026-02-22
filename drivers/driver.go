@@ -1,7 +1,7 @@
 package drivers
 
 import (
-	"github.com/jorgerojas26/lazysql/models"
+	"github.com/AhmedTheGeek/fastsql/models"
 )
 
 type Driver interface {

@@ -5,7 +5,7 @@ import (
 
 	"github.com/rivo/tview"
 
-	"github.com/jorgerojas26/lazysql/app"
+	"github.com/AhmedTheGeek/fastsql/app"
 )
 
 type ResultsTableMenuState struct {

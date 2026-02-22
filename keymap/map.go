@@ -3,7 +3,7 @@ package keymap
 import (
 	"github.com/gdamore/tcell/v2"
 
-	"github.com/jorgerojas26/lazysql/commands"
+	"github.com/AhmedTheGeek/fastsql/commands"
 )
 
 // Map is a collection of keybinds

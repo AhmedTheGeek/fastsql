@@ -11,8 +11,8 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/xo/dburl"
 
-	"github.com/jorgerojas26/lazysql/helpers/logger"
-	"github.com/jorgerojas26/lazysql/models"
+	"github.com/AhmedTheGeek/fastsql/helpers/logger"
+	"github.com/AhmedTheGeek/fastsql/models"
 )
 
 type Postgres struct {

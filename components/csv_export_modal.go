@@ -10,7 +10,7 @@ import (
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 
-	"github.com/jorgerojas26/lazysql/app"
+	"github.com/AhmedTheGeek/fastsql/app"
 )
 
 const defaultBatchSize = 10000
