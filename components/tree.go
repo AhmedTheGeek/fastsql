@@ -2,8 +2,6 @@ package components
 
 import (
 	"fmt"
-	"maps"
-	"slices"
 	"sort"
 	"strings"
 
@@ -328,7 +326,11 @@ func (tree *Tree) databasesToNodes(children map[string][]string, node *tview.Tre
 
 	// Sort the keys and use them to loop over the
 	// children so they are always in the same order.
-	sortedKeys := slices.Sorted(maps.Keys(children))
+	sortedKeys := make([]string, 0, len(children))
+	for k := range children {
+		sortedKeys = append(sortedKeys, k)
+	}
+	sort.Strings(sortedKeys)
 
 	for _, key := range sortedKeys {
 		// Filter schemas if Schemas is configured (PostgreSQL/MSSQL)

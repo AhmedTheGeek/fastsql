@@ -158,7 +158,7 @@ func (p *AIPanel) setupUI() {
 
 	p.SetBorder(true).
 		SetTitle(" AI SQL Generator ").
-		SetBorderColor(tcell.ColorCyan)
+		SetBorderColor(tcell.ColorTeal)
 }
 
 func (p *AIPanel) setupKeybindings() {
