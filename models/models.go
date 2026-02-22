@@ -15,6 +15,21 @@ type AppConfig struct {
 	JSONViewerWordWrap           bool
 }
 
+// SSHConfig holds SSH tunnel configuration for a connection.
+type SSHConfig struct {
+	Enabled          bool   `toml:"enabled"`
+	Host             string `toml:"host"`
+	Port             int    `toml:"port"`
+	User             string `toml:"user"`
+	AuthMethod       string `toml:"auth"` // "key", "password", "agent"
+	KeyPath          string `toml:"key_path"`
+	Passphrase       string `toml:"passphrase"`
+	Password         string `toml:"password"`
+	TunnelLocalPort  int    `toml:"tunnel_local_port"`
+	TunnelRemoteHost string `toml:"tunnel_remote_host"`
+	TunnelRemotePort int    `toml:"tunnel_remote_port"`
+}
+
 type Connection struct {
 	Name string
 
@@ -37,6 +52,9 @@ type Connection struct {
 	Schemas []string
 
 	Commands []*Command
+
+	// SSH tunnel configuration
+	SSH *SSHConfig `toml:"ssh"`
 }
 
 type KeymapConfig map[string]map[string]string
