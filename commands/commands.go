@@ -84,6 +84,11 @@ const (
 
 	// Export
 	ExportCSV
+
+	// AI
+	ToggleAIPanel
+	AIGenerate
+	AIExplain
 )
 
 func (c Command) String() string {
@@ -226,6 +231,12 @@ func (c Command) String() string {
 		return "ToggleJSONViewerWrap"
 	case ExportCSV:
 		return "ExportCSV"
+	case ToggleAIPanel:
+		return "ToggleAIPanel"
+	case AIGenerate:
+		return "AIGenerate"
+	case AIExplain:
+		return "AIExplain"
 	}
 
 	return "Unknown"
